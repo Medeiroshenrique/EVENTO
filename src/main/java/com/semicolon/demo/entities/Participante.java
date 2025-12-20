@@ -14,7 +14,7 @@ public class Participante {
     private String nome;
     private String email;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "participantes")
     private Set<Atividade> atividades = new HashSet<>();
 
 }

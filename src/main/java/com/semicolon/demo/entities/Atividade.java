@@ -3,6 +3,7 @@ package com.semicolon.demo.entities;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -23,6 +24,12 @@ public class Atividade {
 
     @OneToMany(mappedBy = "atividade")
     private Set<Bloco> blocos = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "tb_atividade_participante",
+    joinColumns = @JoinColumn(name = "atividade_id"),
+    inverseJoinColumns = @JoinColumn(name = "participante_id"))
+    private Set<Participante> participantes = new HashSet<>();
 
     public Atividade(){}
 
@@ -71,5 +78,25 @@ public class Atividade {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public void addBloco(Bloco bloco){
+        if(bloco== null)
+            return;//é tipo um break só que pra função sem retorno
+        this.blocos.add(bloco);
+        bloco.setAtividade(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Atividade atividade = (Atividade) o;
+        return Objects.equals(id, atividade.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
